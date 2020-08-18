@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./font_sp0q7clnkd/iconfont.css">
+	<title>upload</title>
+	<style>
+		body {
+			margin: 0;
+		}
+
+		ul {
+			display: inline-block;
+			padding: 0;
+			list-style: none;
+		}
+
+		li:first-child {
+			border-top: black 2px solid;
+		}
+
+		li {
+			width: 280px;
+			height: 20px;
+			padding: 4px 2px;
+			white-space: nowrap;
+			overflow: hidden;
+			border: black 2px solid;
+			border-top: none;
+		}
+	</style>
+</head>
+
+<body>
+	<video src="" controls width="720px"></video>
+	<input type="file" multiple>
+	<ul id="list"></ul>
+	<script src="./upload.js"></script>
+	<script>
+		let uploadButton = document.querySelector('input'),
+			ul = document.querySelector('#list'),
+			iconList = [];
+		let playList = [];
+		let createLi = function (list) {
+			ul.innerHTML = '';
+			for (let i = 0; i < list.length; i++) {
+				let li = document.createElement('li');
+				li.innerHTML = `<span class='icon iconfont icon-icon-test'></span><span class='name'>${list[i].name}</span>`;
+				li.title = list[i].name;
+				ul.appendChild(li);
+			}
+		};
+		uploadButton.addEventListener('change', function () {
+			let getOldLength = playList.length;
+			playList = uploadFiles.upload(this);
+			let getNewLength = playList.length;
+			if (!(getOldLength === getNewLength)) {
+				document.querySelector('video').src=playList[getOldLength].url
+			}
+			createLi(playList);
+			iconList = document.querySelectorAll('.icon');
+
+		});
+		ul.addEventListener('click', function (ev) {
+			if (ev.target.className === 'icon iconfont icon-icon-test') {
+				let deleteFileName = ev.path[1].innerText;
+				playList = uploadFiles.delete(deleteFileName);
+				createLi(playList);
+			};
+			if(ev.target.className === 'name'){
+				let chooseFileName = ev.path[1].innerText;
+				for(n in playList){
+					if(playList[n].name===chooseFileName){
+						document.querySelector('video').src=playList[n].url
+					}
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>
